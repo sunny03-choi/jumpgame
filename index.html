@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JumpGame 1.0 - 다운로드 페이지</title>
+    <style>
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #1c1e21;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+        h1 { margin-bottom: 10px; color: #007bff; }
+        p { color: #606770; line-height: 1.6; }
+        
+        .download-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn:hover { background-color: #0056b3; }
+        .btn:active { transform: scale(0.98); }
+
+        .guide {
+            text-align: left;
+            margin-top: 30px;
+            font-size: 0.9em;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        .guide h3 { font-size: 1em; color: #333; }
+        .guide ul { padding-left: 20px; color: #666; }
+        .guide li { margin-bottom: 8px; }
+        
+        .warning {
+            color: #d93025;
+            font-weight: bold;
+            background: #fdf2f2;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>🎮 JumpGame 1.0</h1>
+        <p>제가 유니티로 직접 만든 첫 번째 점프 게임입니다!<br>아래 버튼을 눌러 게임을 다운로드하세요.</p>
+
+        <div class="download-section">
+           <a href="https://drive.google.com/file/d/1TSmA1rzFJXr9MKA1JqDX9eavyFUiSfik/view?usp=share_link" class="btn">macOS용 다운로드 (.zip)</a>
+            <p style="font-size: 0.8em; margin-top: 10px;">버전: 1.0.0 | 형식: ZIP 압축</p>
+        </div>
+
+        <div class="guide">
+            <h3>⚠️ 실행 전 필독 (Mac 사용자)</h3>
+            <ul>
+                <li>다운로드 후 <strong>반드시 압축을 해제</strong>한 뒤 실행하세요.</li>
+                <li>처음 실행 시 <strong>"손상됨"</strong> 또는 <strong>"확인되지 않은 개발자"</strong> 메시지가 뜨면:
+                    <div class="warning">
+                        1. 앱을 우클릭(Control+클릭) 후 <strong>'열기'</strong> 선택<br>
+                        2. 팝업창에서 다시 <strong>'열기'</strong> 버튼 클릭
+                    </div>
+                </li>
+                <li>그래도 안 되면 [시스템 설정] -> [개인정보 보호 및 보안] 아래쪽의 <strong>'확인 없이 열기'</strong>를 클릭하세요.</li>
+            </ul>
+        </div>
+
+        <p style="margin-top: 30px; font-size: 0.8em; color: #999;">&copy; 2026 Sunny. All rights reserved.</p>
+    </div>
+
+</body>
+</html>
