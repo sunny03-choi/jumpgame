@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
             scoreText.text = "High Score: " + GetHighScore(); // 최고 점수 표시
         }
 
-        if (state == GameState.Intro && Input.GetKeyDown(KeyCode.Space))
+        if (state == GameState.Intro && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
         {
             state = GameState.Playing;
             IntroUI.SetActive(false);
@@ -110,8 +110,8 @@ public class GameManager : MonoBehaviour
             GameOverUI.SetActive(true);
             SaveHighScore(); // 게임 오버 시 최고 점수 저장
         }
-        // 죽은 지 최소 0.5초가 지났을 때만 스페이스바 입력 허용
-        if (state == GameState.GameOver && Input.GetKeyDown(KeyCode.Space) && Time.time > gameOverTime + 0.5f)
+        // 죽은 지 최소 0.5초가 지났을 때만 스페이스바 또는 터치 입력 허용
+        if (state == GameState.GameOver && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && Time.time > gameOverTime + 0.5f)
         {
             ResetGame(); // 씬을 새로 부르는 대신 UI를 전환하고 게임을 리셋합니다.
         }
