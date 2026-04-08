@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
         }
         */
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && isGrounded)
         {
             rb.AddForceY(jumpForce, ForceMode2D.Impulse); //점프할 때마다 점프포스 만큼의 힘을 주는 코드
             isGrounded = false;
