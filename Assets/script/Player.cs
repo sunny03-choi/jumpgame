@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     public BoxCollider2D playerCollider; // <- 이게 추가됨
 
     private bool isGrounded = true; //땅에 닿아있는지 여부를 저장하는 변수
+    private bool canDoubleJump = false; //더블 점프 가능 여부를 저장하는 변수
 
     public bool isInvincible = false; //무적 상태 여부
 
@@ -42,11 +43,23 @@ public class Player : MonoBehaviour
         }
         */
 
-        if (GameManager.Instance.state == GameState.Playing && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && isGrounded)
+        if (GameManager.Instance.state == GameState.Playing && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
         {
-            rb.AddForceY(jumpForce, ForceMode2D.Impulse); //점프할 때마다 점프포스 만큼의 힘을 주는 코드
-            isGrounded = false;
-            playerAnimator.SetInteger("state", 1); //점프 애니메이션으로 전환하는 코드
+            if (isGrounded)
+            {
+                rb.linearVelocityY = 0; //속도를 초기화하여 일정한 점프 높이 유지
+                rb.AddForceY(jumpForce, ForceMode2D.Impulse); //점프할 때마다 점프포스 만큼의 힘을 주는 코드
+                isGrounded = false;
+                canDoubleJump = true;
+                playerAnimator.SetInteger("state", 1); //점프 애니메이션으로 전환하는 코드
+            }
+            else if (canDoubleJump)
+            {
+                rb.linearVelocityY = 0; //속도를 초기화하여 일정한 점프 높이 유지
+                rb.AddForceY(jumpForce, ForceMode2D.Impulse); //더블 점프
+                canDoubleJump = false;
+                playerAnimator.SetInteger("state", 1); //점프 애니메이션 재시작
+            }
         }
         // Impulse는 순간적으로 힘을 주는 것, Force는 지속적으로 힘을 주는 것
     }
@@ -68,7 +81,7 @@ public class Player : MonoBehaviour
                 playerAnimator.SetInteger("state", 2);
             }
             isGrounded = true; //땅에 닿으면 점프할 수 있도록 하는 코드
-
+            canDoubleJump = false; //더블 점프 초기화
         }
     }
     public void KillPlayer()
@@ -82,6 +95,8 @@ public class Player : MonoBehaviour
     {
         transform.position = startPosition; // 위치 초기화
         rb.linearVelocity = Vector2.zero;   // 속도 초기화
+        isGrounded = true;                  // 상태 초기화
+        canDoubleJump = false;              // 더블 점프 초기화
         playerCollider.enabled = true;      // 콜라이더 다시 켜기
         playerAnimator.enabled = true;      // 애니메이터 다시 켜기
         playerAnimator.SetInteger("state", 0); // 애니메이션 상태 초기화
