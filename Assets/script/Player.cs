@@ -135,8 +135,15 @@ public class Player : MonoBehaviour
         }
         else if (collision.gameObject.tag == "food")
         {
+            if (collision.gameObject.name.Contains("garlic"))
+            {
+                GameManager.Instance.AddScore(5); // 마늘을 먹으면 점수 5점 추가
+            }
+            else
+            {
+                Heal(); // 다른 음식은 기존처럼 체력 회복
+            }
             Destroy(collision.gameObject);
-            Heal();
         }
         else if (collision.gameObject.tag == "golden")
         {

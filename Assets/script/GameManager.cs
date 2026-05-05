@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
     public GameState state = GameState.Intro;
     public int maxLives = 8;
     public int lives = 8;
+    public int bonusScore = 0; // 아이템으로 얻은 추가 점수
+
     void Awake()
     {
         if (Instance == null)
@@ -50,7 +52,12 @@ public class GameManager : MonoBehaviour
 
     float CalculateScore()
     {
-        return Time.time - playStartTime; // 게임이 시작된 후 경과한 시간 계산
+        return (Time.time - playStartTime) + bonusScore; // 시간 점수 + 보너스 점수
+    }
+
+    public void AddScore(int amount)
+    {
+        bonusScore += amount;
     }
 
     void SaveHighScore()
@@ -70,7 +77,8 @@ public class GameManager : MonoBehaviour
         {
             return 5f; // 게임이 진행 중이 아닐 때는 기본 속도 유지
         }
-        float speed = 8f + (0.5f * Mathf.Floor(CalculateScore() / 10f)); // 점수에 따라 게임 속도 증가
+        float scoreTime = Time.time - playStartTime; // 속도 증가는 순수 시간 기준으로 계산하거나 전체 점수 기준으로 변경 가능
+        float speed = 8f + (0.5f * Mathf.Floor(scoreTime / 10f)); 
         return Mathf.Min(speed, 30f); // 최대 속도 제한 ,30f로 설정
     }
 
@@ -98,6 +106,7 @@ public class GameManager : MonoBehaviour
             if (foodSpawner != null) foodSpawner.SetActive(true); //음식 스포너 활성화
             if (buildingSpawner != null) buildingSpawner.SetActive(true); //건물 스포너 활성화
             playStartTime = Time.time; // 게임 시작 시간 기록
+            bonusScore = 0; // 보너스 점수 초기화
         }
         if (state == GameState.Playing && lives <= 0)
         {
@@ -120,6 +129,7 @@ public class GameManager : MonoBehaviour
     void ResetGame()
     {
         lives = maxLives;
+        bonusScore = 0; // 리셋 시 점수 초기화
         state = GameState.Intro;
 
         GameOverUI.SetActive(false);
