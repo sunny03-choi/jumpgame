@@ -135,14 +135,43 @@ public class Player : MonoBehaviour
         }
         else if (collision.gameObject.tag == "food")
         {
+            int baseScore = 1;
+            string message = "";
+            int multiplier = 1;
+
             if (collision.gameObject.name.Contains("garlic"))
             {
-                GameManager.Instance.AddScore(5); // 마늘을 먹으면 점수 5점 추가
+                baseScore = 5;
             }
-            else
+
+            // 점프 상태에 따른 배율 결정
+            if (isGrounded)
             {
-                Heal(); // 다른 음식은 기존처럼 체력 회복
+                multiplier = 1;
+                // 바닥에선 메시지 생략 가능 또는 기본 메시지
             }
+            else if (canDoubleJump) // 1단 점프 중 (아직 더블 점프 가능함)
+            {
+                multiplier = 2;
+                message = "JUMP! x2";
+            }
+            else // 2단 점프 중 (더블 점프 소모함)
+            {
+                multiplier = 3;
+                message = "DOUBLE JUMP!! x3";
+            }
+
+            GameManager.Instance.AddScore(baseScore * multiplier);
+            if (!string.IsNullOrEmpty(message))
+            {
+                GameManager.Instance.ShowComboMessage(message);
+            }
+
+            if (!collision.gameObject.name.Contains("garlic"))
+            {
+                Heal();
+            }
+            
             Destroy(collision.gameObject);
         }
         else if (collision.gameObject.tag == "golden")

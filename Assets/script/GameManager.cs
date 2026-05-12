@@ -22,9 +22,11 @@ public class GameManager : MonoBehaviour
     public GameObject buildingSpawner;
     public Player playerScript;
     public TMP_Text scoreText;
+    public TMP_Text comboText; // 추가: 콤보 메시지 텍스트
 
     public float playStartTime;
     private float gameOverTime; // 게임 종료 시점 기록용
+    public float comboTextDuration = 0.8f; // 추가: 콤보 텍스트 표시 시간
 
     public GameState state = GameState.Intro;
     public int maxLives = 8;
@@ -43,6 +45,7 @@ public class GameManager : MonoBehaviour
     {
         IntroUI.SetActive(true);
         GameOverUI.SetActive(false); // 시작할 때 GameOverUI는 꺼둡니다.
+        if (comboText != null) comboText.gameObject.SetActive(false); // 콤보 텍스트 숨기기
 
         // 시작 시 스포너와 초기 배치된 건물 비활성화
         if (enemySpawner != null) enemySpawner.SetActive(false);
@@ -58,6 +61,22 @@ public class GameManager : MonoBehaviour
     public void AddScore(int amount)
     {
         bonusScore += amount;
+    }
+
+    public void ShowComboMessage(string message)
+    {
+        if (comboText == null) return;
+        
+        comboText.text = message;
+        comboText.gameObject.SetActive(true);
+        
+        CancelInvoke("HideComboMessage");
+        Invoke("HideComboMessage", comboTextDuration);
+    }
+
+    void HideComboMessage()
+    {
+        if (comboText != null) comboText.gameObject.SetActive(false);
     }
 
     void SaveHighScore()
