@@ -51,6 +51,9 @@ public class GameManager : MonoBehaviour
         if (enemySpawner != null) enemySpawner.SetActive(false);
         if (foodSpawner != null) foodSpawner.SetActive(false);
         if (buildingSpawner != null) buildingSpawner.SetActive(false);
+
+        // 배경 음악 시작
+        if (SoundManager.Instance != null) SoundManager.Instance.PlayMusic(GameState.Intro);
     }
 
     float CalculateScore()
@@ -126,6 +129,7 @@ public class GameManager : MonoBehaviour
             if (buildingSpawner != null) buildingSpawner.SetActive(true); //건물 스포너 활성화
             playStartTime = Time.time; // 게임 시작 시간 기록
             bonusScore = 0; // 보너스 점수 초기화
+            if (SoundManager.Instance != null) SoundManager.Instance.PlayMusic(GameState.Playing);
         }
         if (state == GameState.Playing && lives <= 0)
         {
@@ -137,6 +141,7 @@ public class GameManager : MonoBehaviour
             gameOverTime = Time.time; // 죽은 시점 기록
             GameOverUI.SetActive(true);
             SaveHighScore(); // 게임 오버 시 최고 점수 저장
+            if (SoundManager.Instance != null) SoundManager.Instance.PlayMusic(GameState.GameOver);
         }
         // 죽은 지 최소 0.5초가 지났을 때만 스페이스바 또는 터치 입력 허용
         if (state == GameState.GameOver && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && Time.time > gameOverTime + 0.5f)
@@ -153,6 +158,8 @@ public class GameManager : MonoBehaviour
 
         GameOverUI.SetActive(false);
         IntroUI.SetActive(true);
+
+        if (SoundManager.Instance != null) SoundManager.Instance.PlayMusic(GameState.Intro);
 
         // 다시 인트로 상태로 갈 때 비활성화
         if (enemySpawner != null) enemySpawner.SetActive(false);
