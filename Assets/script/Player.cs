@@ -105,7 +105,12 @@ public class Player : MonoBehaviour
     void Hit()
     {
         GameManager.Instance.lives -= 1;
-
+        
+        // 카메라 흔들림 호출 (지속시간 0.2초, 강도 0.2)
+        if (CameraShake.Instance != null)
+        {
+            StartCoroutine(CameraShake.Instance.Shake(0.8f, 1.8f));
+        }
     }
     void Heal()
     {
