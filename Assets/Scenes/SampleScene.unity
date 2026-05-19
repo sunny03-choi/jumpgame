@@ -682,6 +682,7 @@ GameObject:
   m_Component:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
+  - component: {fileID: 519420033}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
   m_Layer: 0
@@ -809,6 +810,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bff744d7706347c882211a8a8eb0bdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
 --- !u!1 &578006919
 GameObject:
   m_ObjectHideFlags: 0
@@ -1480,7 +1493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89933530413824572be7ac356825f720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BackgroundScroll
-  scrollSpeed: 1.8
+  scrollSpeed: 1
   meshRenderer: {fileID: 1088024367}
 --- !u!61 &1088024371
 BoxCollider2D:
@@ -2472,7 +2485,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89933530413824572be7ac356825f720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
-  scrollSpeed: 0.1
+  scrollSpeed: 1
   meshRenderer: {fileID: 1767812645}
 --- !u!1 &1778347972
 GameObject:
@@ -3027,7 +3040,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89933530413824572be7ac356825f720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BackgroundScroll
-  scrollSpeed: 0.8
+  scrollSpeed: 2
   meshRenderer: {fileID: 2121321894}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

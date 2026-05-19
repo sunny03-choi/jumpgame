@@ -19,4 +19,3 @@ public class BackgroundScroll : MonoBehaviour
         meshRenderer.material.mainTextureOffset += new Vector2(GameManager.Instance.CalculateGameSpeed() / 20 * scrollSpeed * Time.deltaTime, 0);
     }
 }
-
