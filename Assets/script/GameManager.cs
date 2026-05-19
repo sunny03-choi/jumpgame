@@ -113,11 +113,11 @@ public class GameManager : MonoBehaviour
     {
         if (state == GameState.Playing)
         {
-            scoreText.text = "Score: " + Mathf.FloorToInt(CalculateScore()); // 점수 업데이트
+            if (scoreText != null) scoreText.text = "Score: " + Mathf.FloorToInt(CalculateScore()); // 점수 업데이트
         }
         else if (state == GameState.GameOver)
         {
-            scoreText.text = "High Score: " + GetHighScore(); // 최고 점수 표시
+            if (scoreText != null) scoreText.text = "High Score: " + GetHighScore(); // 최고 점수 표시
         }
 
         if (state == GameState.Intro && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))

@@ -8,14 +8,16 @@ public class BackgroundScroll : MonoBehaviour
 
     [Header("레퍼런스")]
     public MeshRenderer meshRenderer;
+    private Material backgroundMaterial;
+
     void Start()
     {
-
+        backgroundMaterial = meshRenderer.material;
     }
 
     // Update is called once per frame
     void Update()
     {
-        meshRenderer.material.mainTextureOffset += new Vector2(GameManager.Instance.CalculateGameSpeed() / 20 * scrollSpeed * Time.deltaTime, 0);
+        backgroundMaterial.mainTextureOffset += new Vector2(GameManager.Instance.CalculateGameSpeed() / 20 * scrollSpeed * Time.deltaTime, 0);
     }
 }
