@@ -2,6 +2,7 @@ using TMPro;
 using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering; // 추가: URP 콜백을 위해 필요
 
 public enum GameState
 {
@@ -33,12 +34,31 @@ public class GameManager : MonoBehaviour
     public int lives = 8;
     public int bonusScore = 0; // 아이템으로 얻은 추가 점수
 
+    [Header("화면 반전 설정")]
+    public bool isFlipped = false;
+    private float nextFlipTime;
+    public string uiCameraName = "UI Camera"; // UI 전용 카메라가 있다면 그 이름을 입력
+
     void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
         }
+    }
+
+    void OnEnable()
+    {
+        // URP 카메라 렌더링 콜백 등록
+        RenderPipelineManager.beginCameraRendering += OnBeginCameraRendering;
+        RenderPipelineManager.endCameraRendering += OnEndCameraRendering;
+    }
+
+    void OnDisable()
+    {
+        // 콜백 해제
+        RenderPipelineManager.beginCameraRendering -= OnBeginCameraRendering;
+        RenderPipelineManager.endCameraRendering -= OnEndCameraRendering;
     }
 
     void Start()
@@ -54,6 +74,43 @@ public class GameManager : MonoBehaviour
 
         // 배경 음악 시작
         if (SoundManager.Instance != null) SoundManager.Instance.PlayMusic(GameState.Intro);
+
+        ScheduleNextFlip();
+    }
+
+    void ScheduleNextFlip()
+    {
+        // 1초에서 32초 사이의 랜덤한 시간 후 반전
+        float delay = Random.Range(1f, 32f);
+        nextFlipTime = Time.time + delay;
+    }
+
+    void OnBeginCameraRendering(ScriptableRenderContext context, Camera camera)
+    {
+        // 게임 카메라에만 적용 (에디터 뷰 제외)
+        // UI가 포함된 카메라는 반전시키지 않도록 설정하거나, 
+        // UI Canvas의 Render Mode가 'Screen Space - Overlay'라면 이 코드의 영향을 받지 않습니다.
+        // 만약 UI도 함께 반전된다면, 카메라 이름을 체크하여 제외할 수 있습니다.
+        if (camera.cameraType == CameraType.Game && camera.name != uiCameraName)
+        {
+            camera.ResetProjectionMatrix();
+            GL.invertCulling = isFlipped;
+            if (isFlipped)
+            {
+                camera.projectionMatrix = camera.projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
+            }
+        }
+    }
+
+    void OnEndCameraRendering(ScriptableRenderContext context, Camera camera)
+    {
+        if (camera.cameraType == CameraType.Game)
+        {
+            GL.invertCulling = false;
+            // UI 카메라가 따로 없고 한 카메라에서 다 그린다면, 
+            // 여기서 Matrix를 리셋해줘야 다음 렌더링(UI 등)에 영향을 주지 않을 수 있습니다.
+            camera.ResetProjectionMatrix();
+        }
     }
 
     float CalculateScore()
@@ -111,6 +168,17 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        // 화면 반전 타이머 체크
+        if (state == GameState.Playing)
+        {
+            if (Time.time >= nextFlipTime)
+            {
+                isFlipped = !isFlipped;
+                ScheduleNextFlip();
+                UpdateUIFlip(); // UI 반전 상태 업데이트 호출
+            }
+        }
+
         if (state == GameState.Playing)
         {
             if (scoreText != null) scoreText.text = "Score: " + Mathf.FloorToInt(CalculateScore()); // 점수 업데이트
@@ -156,6 +224,10 @@ public class GameManager : MonoBehaviour
         bonusScore = 0; // 리셋 시 점수 초기화
         state = GameState.Intro;
 
+        isFlipped = false; // 반전 상태 초기화
+        UpdateUIFlip();    // UI 스케일 초기화
+        ScheduleNextFlip();
+
         GameOverUI.SetActive(false);
         IntroUI.SetActive(true);
 
@@ -175,5 +247,38 @@ public class GameManager : MonoBehaviour
 
         GameObject[] foods = GameObject.FindGameObjectsWithTag("food");
         foreach (GameObject food in foods) Destroy(food);
+    }
+
+    // UI 요소들을 다시 반전시켜 정상적으로 보이게 하는 함수
+    void UpdateUIFlip()
+    {
+        float scaleX = isFlipped ? -1f : 1f;
+
+        // 점수 및 콤보 텍스트 반전 보정
+        if (scoreText != null) scoreText.transform.localScale = new Vector3(scaleX, 1, 1);
+        if (comboText != null) comboText.transform.localScale = new Vector3(scaleX, 1, 1);
+
+        // UI 패널 반전 보정
+        if (IntroUI != null) IntroUI.transform.localScale = new Vector3(scaleX, 1, 1);
+        if (GameOverUI != null) GameOverUI.transform.localScale = new Vector3(scaleX, 1, 1);
+
+        // 하트(목숨) UI 오브젝트들도 찾아서 보정
+        GameObject[] hearts = GameObject.FindGameObjectsWithTag("heart"); // 하트에 'heart' 태그가 있다고 가정
+        if (hearts.Length == 0)
+        {
+            // 태그가 없다면 Heart 스크립트를 가진 모든 오브젝트를 찾음
+            Heart[] heartScripts = FindObjectsByType<Heart>(FindObjectsSortMode.None);
+            foreach (var h in heartScripts)
+            {
+                h.transform.localScale = new Vector3(scaleX, 1, 1);
+            }
+        }
+        else
+        {
+            foreach (var h in hearts)
+            {
+                h.transform.localScale = new Vector3(scaleX, 1, 1);
+            }
+        }
     }
 }
