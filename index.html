@@ -165,7 +165,7 @@
 
         async function getCount(key) {
             try {
-                const response = await fetch(`https://api.counterapi.dev/v1/${API_NAMESPACE}/${key}`);
+                const response = await fetch(`https://api.counterapi.dev/v1/${API_NAMESPACE}/${key}`, { cache: "no-store" });
                 const data = await response.json();
                 return data.count || 0;
             } catch { return 0; }
@@ -173,8 +173,7 @@
 
         async function trackAction(key) {
             try {
-                // 개별 액션 카운트 증가
-                await fetch(`https://api.counterapi.dev/v1/${API_NAMESPACE}/${key}/up`);
+                await fetch(`https://api.counterapi.dev/v1/${API_NAMESPACE}/${key}/up`, { cache: "no-store" });
                 console.log(`Tracked action: ${key}`);
                 updateStats();
             } catch (e) { console.error('Tracking failed', e); }
