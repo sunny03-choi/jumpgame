@@ -18,5 +18,3 @@ public class Mover : MonoBehaviour
         // Vector3.left == new Vector3(-1, 0, 0)
     }
 }
-
-

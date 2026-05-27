@@ -178,6 +178,8 @@ MonoBehaviour:
   maxLives: 8
   lives: 8
   bonusScore: 0
+  isFlipped: 0
+  uiCameraName: UI Camera
 --- !u!1 &65435392
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,6 +223,8 @@ MonoBehaviour:
   maxLives: 8
   lives: 8
   bonusScore: 0
+  isFlipped: 0
+  uiCameraName: UI Camera
 --- !u!4 &65435394
 Transform:
   m_ObjectHideFlags: 0
@@ -882,6 +886,8 @@ MonoBehaviour:
   maxLives: 8
   lives: 8
   bonusScore: 0
+  isFlipped: 0
+  uiCameraName: UI Camera
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1311,6 +1317,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   jumpForce: 16
+  moveSpeed: 5
+  dashForce: 20
+  dashDuration: 0.6
+  dashCooldown: 1
   rb: {fileID: 1064178518}
   playerAnimator: {fileID: 1064178519}
   playerCollider: {fileID: 1064178517}

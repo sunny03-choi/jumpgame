@@ -263,22 +263,11 @@ public class GameManager : MonoBehaviour
         if (GameOverUI != null) GameOverUI.transform.localScale = new Vector3(scaleX, 1, 1);
 
         // 하트(목숨) UI 오브젝트들도 찾아서 보정
-        GameObject[] hearts = GameObject.FindGameObjectsWithTag("heart"); // 하트에 'heart' 태그가 있다고 가정
-        if (hearts.Length == 0)
+        // 태그를 사용하는 대신 Heart 스크립트를 가진 모든 오브젝트를 직접 찾습니다. (태그 미설정 시 에러 방지)
+        Heart[] heartScripts = FindObjectsByType<Heart>(FindObjectsSortMode.None);
+        foreach (var h in heartScripts)
         {
-            // 태그가 없다면 Heart 스크립트를 가진 모든 오브젝트를 찾음
-            Heart[] heartScripts = FindObjectsByType<Heart>(FindObjectsSortMode.None);
-            foreach (var h in heartScripts)
-            {
-                h.transform.localScale = new Vector3(scaleX, 1, 1);
-            }
-        }
-        else
-        {
-            foreach (var h in hearts)
-            {
-                h.transform.localScale = new Vector3(scaleX, 1, 1);
-            }
+            h.transform.localScale = new Vector3(scaleX, 1, 1);
         }
     }
 }
