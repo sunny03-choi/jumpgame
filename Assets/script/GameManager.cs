@@ -182,6 +182,15 @@ public class GameManager : MonoBehaviour
         if (state == GameState.Playing)
         {
             if (scoreText != null) scoreText.text = "Score: " + Mathf.FloorToInt(CalculateScore()); // 점수 업데이트
+
+            // 속도에 따른 BGM 피치 조절 추가
+            if (SoundManager.Instance != null)
+            {
+                float currentSpeed = CalculateGameSpeed();
+                // 기본 속도 8.0을 기준으로, 속도가 1 증가할 때마다 피치를 0.01씩 올림 (최대 30일 때 약 1.22)
+                float targetPitch = 1f + (currentSpeed - 8f) * 0.01f;
+                SoundManager.Instance.SetMusicPitch(targetPitch);
+            }
         }
         else if (state == GameState.GameOver)
         {

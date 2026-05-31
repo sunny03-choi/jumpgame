@@ -30,6 +30,7 @@ public class SoundManager : MonoBehaviour
         if (musicSource == null) return;
 
         musicSource.Stop();
+        musicSource.pitch = 1f; // 새로운 음악 시작 시 피치 초기화
         
         switch (state)
         {
@@ -57,6 +58,14 @@ public class SoundManager : MonoBehaviour
                     musicSource.Play();
                 }
                 break;
+        }
+    }
+
+    public void SetMusicPitch(float pitch)
+    {
+        if (musicSource != null)
+        {
+            musicSource.pitch = pitch;
         }
     }
 }
