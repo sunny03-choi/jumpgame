@@ -2,7 +2,8 @@ using TMPro;
 using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Rendering; // 추가: URP 콜백을 위해 필요
+using UnityEngine.Rendering;
+using System.Collections.Generic; // 추가
 
 public enum GameState
 {
@@ -18,7 +19,7 @@ public class GameManager : MonoBehaviour
     [Header("레퍼런스")]
     public GameObject IntroUI;
     public GameObject GameOverUI;
-    public GameObject enemySpawner;
+    public GameObject[] enemySpawners; // GameObject에서 GameObject[]로 변경
     public GameObject foodSpawner;
     public GameObject buildingSpawner;
     public Player playerScript;
@@ -41,9 +42,24 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        // 싱글톤 초기화 개선
         if (Instance == null)
         {
             Instance = this;
+        }
+        else if (Instance != this)
+        {
+            // 만약 기존 인스턴스에 중요한 레퍼런스가 없고 나에게 있다면 교체
+            if (Instance.foodSpawner == null && this.foodSpawner != null)
+            {
+                Destroy(Instance);
+                Instance = this;
+            }
+            else
+            {
+                Destroy(this);
+                return;
+            }
         }
     }
 
@@ -63,19 +79,46 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        // 내가 현재 인스턴스가 아니면 실행 안 함
+        if (Instance != this) return;
+
+        // 자동으로 모든 적 스포너 찾기 (비활성화된 것 포함)
+        var allSpawners = FindObjectsByType<Spawner>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        List<GameObject> enemyList = new List<GameObject>();
+        
+        foreach (var s in allSpawners)
+        {
+            if (s.gameObject == foodSpawner || s.gameObject == buildingSpawner) continue;
+            if (s.gameObject.name.Contains("Enemy"))
+            {
+                enemyList.Add(s.gameObject);
+            }
+        }
+        enemySpawners = enemyList.ToArray();
+
         IntroUI.SetActive(true);
-        GameOverUI.SetActive(false); // 시작할 때 GameOverUI는 꺼둡니다.
-        if (comboText != null) comboText.gameObject.SetActive(false); // 콤보 텍스트 숨기기
+        GameOverUI.SetActive(false);
+        if (comboText != null) comboText.gameObject.SetActive(false);
 
-        // 시작 시 스포너와 초기 배치된 건물 비활성화
-        if (enemySpawner != null) enemySpawner.SetActive(false);
-        if (foodSpawner != null) foodSpawner.SetActive(false);
-        if (buildingSpawner != null) buildingSpawner.SetActive(false);
+        // 시작 시 모든 스포너 초기 상태 설정
+        SetSpawnersActive(false);
 
-        // 배경 음악 시작
         if (SoundManager.Instance != null) SoundManager.Instance.PlayMusic(GameState.Intro);
-
         ScheduleNextFlip();
+    }
+
+    // 스포너들을 일괄적으로 켜고 끄는 함수
+    void SetSpawnersActive(bool active)
+    {
+        if (enemySpawners != null)
+        {
+            foreach (var spawner in enemySpawners)
+            {
+                if (spawner != null) spawner.SetActive(active);
+            }
+        }
+        if (foodSpawner != null) foodSpawner.SetActive(active);
+        if (buildingSpawner != null) buildingSpawner.SetActive(active);
     }
 
     void ScheduleNextFlip()
@@ -201,9 +244,9 @@ public class GameManager : MonoBehaviour
         {
             state = GameState.Playing;
             IntroUI.SetActive(false);
-            if (enemySpawner != null) enemySpawner.SetActive(true); //적 스포너 활성화
-            if (foodSpawner != null) foodSpawner.SetActive(true); //음식 스포너 활성화
-            if (buildingSpawner != null) buildingSpawner.SetActive(true); //건물 스포너 활성화
+            
+            SetSpawnersActive(true);
+            
             playStartTime = Time.time; // 게임 시작 시간 기록
             bonusScore = 0; // 보너스 점수 초기화
             if (SoundManager.Instance != null) SoundManager.Instance.PlayMusic(GameState.Playing);
@@ -211,9 +254,9 @@ public class GameManager : MonoBehaviour
         if (state == GameState.Playing && lives <= 0)
         {
             playerScript.KillPlayer(); //플레이어 죽이는 코드
-            if (enemySpawner != null) enemySpawner.SetActive(false);
-            if (foodSpawner != null) foodSpawner.SetActive(false);
-            if (buildingSpawner != null) buildingSpawner.SetActive(false);
+            
+            SetSpawnersActive(false);
+            
             state = GameState.GameOver;
             gameOverTime = Time.time; // 죽은 시점 기록
             GameOverUI.SetActive(true);
@@ -242,10 +285,8 @@ public class GameManager : MonoBehaviour
 
         if (SoundManager.Instance != null) SoundManager.Instance.PlayMusic(GameState.Intro);
 
-        // 다시 인트로 상태로 갈 때 비활성화
-        if (enemySpawner != null) enemySpawner.SetActive(false);
-        if (foodSpawner != null) foodSpawner.SetActive(false);
-        if (buildingSpawner != null) buildingSpawner.SetActive(false);
+        // 다시 인트로 상태로 갈 때 모든 스포너 비활성화
+        SetSpawnersActive(false);
 
         // 플레이어 위치 및 상태 초기화
         playerScript.ResetPlayer();

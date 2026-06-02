@@ -166,7 +166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   IntroUI: {fileID: 578006919}
   GameOverUI: {fileID: 2078736}
-  enemySpawner: {fileID: 1693035183}
+  enemySpawners: []
   foodSpawner: {fileID: 1108636240}
   buildingSpawner: {fileID: 0}
   playerScript: {fileID: 1064178520}
@@ -211,7 +211,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   IntroUI: {fileID: 578006919}
   GameOverUI: {fileID: 2078736}
-  enemySpawner: {fileID: 1693035183}
+  enemySpawners: []
   foodSpawner: {fileID: 1108636240}
   buildingSpawner: {fileID: 1677611285}
   playerScript: {fileID: 1064178520}
@@ -874,7 +874,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   IntroUI: {fileID: 578006919}
   GameOverUI: {fileID: 2078736}
-  enemySpawner: {fileID: 1693035183}
+  enemySpawners: []
   foodSpawner: {fileID: 1108636240}
   buildingSpawner: {fileID: 0}
   playerScript: {fileID: 1064178520}
@@ -1691,7 +1691,7 @@ MonoBehaviour:
   minSpawnDelay: 6
   maxSpawnDelay: 7
   minYOffset: 0
-  maxYOffset: 3
+  maxYOffset: 0
   gameObjects:
   - {fileID: 5370776192739394220, guid: 1700359ff19184c06978df2db4959b34, type: 3}
   - {fileID: 5891204453222175044, guid: b44948bb39258408fbc84f3043685dbe, type: 3}
@@ -2352,8 +2352,8 @@ MonoBehaviour:
   minYOffset: 0
   maxYOffset: 0
   gameObjects:
-  - {fileID: 1058074349021116014, guid: 096031d4bfb844b51925ceaa479d5662, type: 3}
   - {fileID: 3635819974415779287, guid: 0ea0d984c71ce4fd1a977d00dad0294a, type: 3}
+  - {fileID: 1058074349021116014, guid: 096031d4bfb844b51925ceaa479d5662, type: 3}
 --- !u!4 &1693035185
 Transform:
   m_ObjectHideFlags: 0

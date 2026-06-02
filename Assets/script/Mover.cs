@@ -13,8 +13,8 @@ public class Mover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position += Vector3.left *
-            GameManager.Instance.CalculateGameSpeed() * Time.deltaTime; // 왼쪽으로 이동
-        // Vector3.left == new Vector3(-1, 0, 0)
+        // 기본 게임 속도 + 개별 속도
+        float totalSpeed = GameManager.Instance.CalculateGameSpeed() + moveSpeed;
+        transform.position += Vector3.left * totalSpeed * Time.deltaTime; // 왼쪽으로 이동
     }
 }

@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4970e2ad4b9ff4be0a110f5641ac6da1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Mover
-  moveSpeed: 3
+  moveSpeed: 5
 --- !u!60 &4666359916046699330
 PolygonCollider2D:
   m_ObjectHideFlags: 0
